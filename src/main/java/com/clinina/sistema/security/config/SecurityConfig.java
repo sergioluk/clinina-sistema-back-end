@@ -30,60 +30,17 @@ public class SecurityConfig {
         this.usuarioDetailsService = usuarioDetailsService;
     }
 
-    // 🔹 PasswordEncoder
+    // passwordEncoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 🔹 AuthenticationManager
+    // authenticationManager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
-    // 🔹 SecurityFilterChain
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.disable())
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/auth/**").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .sessionManagement(sess -> sess
-//                        .sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS)
-//                );
-//
-//
-//        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//        return http.build();
-//    }
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
-//
-//        http
-//                .csrf(csrf -> csrf.disable())
-//                .cors(cors -> {}) // habilita o CORS usando o CorsConfigurationSource do WebConfig ou do Bean abaixo
-//                .authorizeHttpRequests(auth -> auth
-//                        // permitir todas as requisições OPTIONS (preflight)
-//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//                        // endpoints públicos
-//                        .requestMatchers("/auth/**").permitAll()
-//                        // resto precisa autenticação
-//                        .anyRequest().authenticated()
-//                )
-//                .sessionManagement(sess -> sess
-//                        .sessionCreationPolicy(
-//                                org.springframework.security.config.http.SessionCreationPolicy.STATELESS
-//                        )
-//                );
-//
-//        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//        return http.build();
-//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
@@ -131,7 +88,6 @@ public class SecurityConfig {
                         // Endpoints públicos
                         .requestMatchers("/auth/**").permitAll()
 
-                        // Todo o resto exige JWT
                         .anyRequest().authenticated()
                 )
 
@@ -149,7 +105,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Bean que define as origens e métodos permitidos
+    // bean que define as origens e métodos permitidos
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
