@@ -1,6 +1,9 @@
 package com.clinina.sistema.mapper;
 
-import com.clinina.sistema.dto.*;
+import com.clinina.sistema.dto.grupo.request.GrupoCategoriaCreateRequestDto;
+import com.clinina.sistema.dto.grupo.request.GrupoCreateRequestDto;
+import com.clinina.sistema.dto.grupo.response.GrupoCategoriaResponseDto;
+import com.clinina.sistema.dto.grupo.response.GrupoResponseDto;
 import com.clinina.sistema.model.entity.Grupo;
 import com.clinina.sistema.model.entity.GrupoCategoria;
 import org.mapstruct.Mapper;

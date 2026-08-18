@@ -1,11 +1,12 @@
 package com.clinina.sistema.controller;
 
-import com.clinina.sistema.dto.GrupoCategoriaCreateRequestDto;
-import com.clinina.sistema.dto.GrupoCategoriaResponseDto;
-import com.clinina.sistema.dto.GrupoCreateRequestDto;
-import com.clinina.sistema.dto.GrupoResponseDto;
-import com.clinina.sistema.model.entity.Grupo;
+import com.clinina.sistema.dto.grupo.request.GrupoCategoriaCreateRequestDto;
+import com.clinina.sistema.dto.grupo.response.GrupoCategoriaResponseDto;
+import com.clinina.sistema.dto.grupo.request.GrupoCreateRequestDto;
+import com.clinina.sistema.dto.grupo.response.GrupoResponseDto;
 import com.clinina.sistema.service.GrupoService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +27,9 @@ public class GrupoController {
     }
 
     @PostMapping
-    public void criarGrupo(@RequestBody GrupoCreateRequestDto dto) {
-        grupoService.criarGrupo(dto);
+    public ResponseEntity<GrupoResponseDto> criarGrupo(@RequestBody GrupoCreateRequestDto dto) {
+        GrupoResponseDto response = grupoService.criarGrupo(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/grupo-categorias")
@@ -38,5 +40,11 @@ public class GrupoController {
     @GetMapping("/grupo-categorias")
     public List<GrupoCategoriaResponseDto> listarGruposCategorias() {
         return grupoService.listarGruposCategorias();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> apagarGrupo(@PathVariable Long id) {
+        grupoService.apagarGrupo(id);
+        return ResponseEntity.noContent().build();
     }
 }
