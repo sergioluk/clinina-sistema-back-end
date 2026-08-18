@@ -1,7 +1,7 @@
 package com.clinina.sistema.service;
 
-import com.clinina.sistema.dto.MarcaCreateRequestDto;
-import com.clinina.sistema.dto.MarcaResponseDto;
+import com.clinina.sistema.dto.marca.request.MarcaCreateRequestDto;
+import com.clinina.sistema.dto.marca.response.MarcaResponseDto;
 import com.clinina.sistema.mapper.MarcaMapper;
 import com.clinina.sistema.model.entity.Marca;
 import com.clinina.sistema.repository.MarcaRepository;
@@ -20,9 +20,10 @@ public class MarcaService {
         this.marcaMapper = marcaMapper;
     }
 
-    public void criarMarca(MarcaCreateRequestDto dto) {
+    public MarcaResponseDto criarMarca(MarcaCreateRequestDto dto) {
         Marca marca = this.marcaMapper.toEntity(dto);
-        this.marcaRepository.save(marca);
+        Marca marcaSalvo = this.marcaRepository.save(marca);
+        return this.marcaMapper.toDto(marcaSalvo);
     }
 
     public List<MarcaResponseDto> listarMarcas() {

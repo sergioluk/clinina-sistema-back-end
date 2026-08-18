@@ -1,4 +1,4 @@
-package com.clinina.sistema.dto;
+package com.clinina.sistema.dto.marca.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

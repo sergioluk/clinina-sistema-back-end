@@ -1,9 +1,10 @@
 package com.clinina.sistema.controller;
 
-import com.clinina.sistema.dto.MarcaCreateRequestDto;
-import com.clinina.sistema.dto.MarcaResponseDto;
-import com.clinina.sistema.model.entity.Marca;
+import com.clinina.sistema.dto.marca.request.MarcaCreateRequestDto;
+import com.clinina.sistema.dto.marca.response.MarcaResponseDto;
 import com.clinina.sistema.service.MarcaService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,8 @@ public class MarcaController {
     }
 
     @PostMapping
-    public void criarMarca(@RequestBody MarcaCreateRequestDto dto) {
-        marcaService.criarMarca(dto);
+    public ResponseEntity<MarcaResponseDto> criarMarca(@RequestBody MarcaCreateRequestDto dto) {
+        MarcaResponseDto response = marcaService.criarMarca(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
