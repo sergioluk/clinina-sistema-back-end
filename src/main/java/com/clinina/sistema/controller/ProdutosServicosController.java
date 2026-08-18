@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -20,11 +19,6 @@ public class ProdutosServicosController {
     public ProdutosServicosController(ProdutosServicosService produtosServicosService) {
         this.produtosServicosService = produtosServicosService;
     }
-
-//    @GetMapping
-//    public ProdutosDashboardResponseDto listarProdutosServicos() {
-//        return this.produtosServicosService.listarTodosProdutos();
-//    }
 
     @GetMapping
     public ProdutoPageResponseDto listarProdutosServicos(

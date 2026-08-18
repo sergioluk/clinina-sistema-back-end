@@ -56,29 +56,6 @@ public class ProdutosServicosService {
         this.produtoMapper = produtoMapper;
     }
 
-    /*public ProdutosDashboardResponseDto listarTodosProdutos() {
-        List<Produto> produtos = produtosServicosRepository.findAll();
-        List<ProdutoResponseDto> produtosResponseList = new ArrayList<>();
-
-        int produtosVencidos = 0;
-        int produtosVencendoEm60Dias = 0;
-
-        for (Produto produto : produtos) {
-            int markup = calcularMarkup(produto);
-            SituacaoEstoque situacaoEstoque = calcularSituacaoEstoque(produto);
-            StatusValidade statusValidade = calcularStatusVencimento(produto.getDataValidade());
-            if (statusValidade == StatusValidade.VENCIDO) {
-                produtosVencidos++;
-            } else if (statusValidade == StatusValidade.VENCENDO) {
-                produtosVencendoEm60Dias++;
-            }
-            ProdutoResponseDto dto = produtoMapper.toDto(produto, markup, situacaoEstoque, statusValidade);
-            produtosResponseList.add(dto);
-        }
-
-        return new ProdutosDashboardResponseDto(produtosResponseList, produtosVencidos, produtosVencendoEm60Dias);
-    }*/
-
     public ProdutoPageResponseDto listarProdutos(int pagina, int tamanho, String busca, String ordenarPor, String direcao) {
         Sort sort = Sort.unsorted();
 
@@ -279,18 +256,6 @@ public class ProdutosServicosService {
         return (int) java.time.Duration.between(produto.getCreatedAt(), Instant.now()).toDays();
     }
 
-    /*private int getDiasVencendo(LocalDate dataValidade) {
-        if (dataValidade == null) {
-            System.out.println("data validade está null");
-            return 0;
-        }
-        if (dataValidade.isBefore(LocalDate.now(ZONE_ID))) {
-            System.out.println("Caiu no isBefore?");
-            return 0;
-        }
-        return (int) java.time.Duration.between(LocalDateTime.now(ZONE_ID), dataValidade.atStartOfDay()).toDays();
-    }*/
-
     private int getDiasVencendo(LocalDate dataValidade) {
         if (dataValidade == null) {
             return 0;
@@ -400,19 +365,15 @@ public class ProdutosServicosService {
 
         String termoNormalizado = normalize(termo);
 
-        // 1. Busca por código de barras
-        Optional<Produto> produto =
-                produtosServicosRepository.findByCodigoDeBarras(termo);
+        Optional<Produto> produto = produtosServicosRepository.findByCodigoDeBarras(termo);
 
         List<Produto> produtos;
 
         if (produto.isPresent()) {
             produtos = List.of(produto.get());
         } else {
-            // 2. Busca FULLTEXT
             produtos = produtosServicosRepository.buscarPorNome(termoNormalizado);
 
-            // 3. Fallback LIKE
             if (produtos.isEmpty()) {
                 produtos = produtosServicosRepository.findTop20ByNomeNormalizadoContaining(termoNormalizado);
             }

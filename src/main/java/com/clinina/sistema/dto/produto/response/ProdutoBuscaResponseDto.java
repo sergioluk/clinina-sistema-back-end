@@ -9,7 +9,6 @@ public record ProdutoBuscaResponseDto(
         long id,
         String nome,
         BigDecimal preco,
-        //String grupoNome,
         boolean ehFracionado,
         String unidadeVenda,
         List<StatusMensagemDTO> mensagens
