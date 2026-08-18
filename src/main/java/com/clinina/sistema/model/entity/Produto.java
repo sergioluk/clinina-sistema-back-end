@@ -1,16 +1,16 @@
 package com.clinina.sistema.model.entity;
 
-import com.clinina.sistema.model.enums.SituacaoEstoque;
+import com.clinina.sistema.model.enums.ProdutoProposito;
 import com.clinina.sistema.model.enums.TipoControleDesconto;
+import com.clinina.sistema.model.enums.TipoProduto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity(name = "Produto")
 @Table(name = "tb_produtos")
@@ -39,24 +39,32 @@ public class Produto {
     @JoinColumn(name = "grupo_id")
     private Grupo grupo;
 
+    @Column(name = "proposito", nullable = false)
+    private ProdutoProposito proposito;
+    @Column(name = "markup_desejado", nullable = false)
+    private Integer markupDesejado;
     @Column(name = "custo")
     private BigDecimal custo;
     @Column(name = "preco", nullable = false)
     private BigDecimal preco;
+    @Column(name = "exibe_preco", nullable = false)
+    private boolean exibePreco;
+    @Column(name = "permite_alterar_preco", nullable = false)
+    private boolean permiteAlterarPreco;
 
     @Column(name = "controla_estoque", nullable = false)
     private Boolean controlaEstoque;
-    @Column(name = "estoque_minimo")
-    private Integer estoqueMinimo;
-    @Column(name = "estoque_maximo")
-    private Integer estoqueMaximo;
-    @Column(name = "estoque_atual")
-    private Integer estoqueAtual;
+    @Column(name = "estoque_minimo", precision = 10, scale = 2)
+    private BigDecimal estoqueMinimo;
+    @Column(name = "estoque_maximo", precision = 10, scale = 2)
+    private BigDecimal estoqueMaximo;
+    @Column(name = "estoque_atual", precision = 10, scale = 2)
+    private BigDecimal estoqueAtual;
 
     @Column(name = "controla_validade", nullable = false)
     private Boolean controlaValidade;
     @Column(name = "data_validade")
-    private LocalDateTime dataValidade;
+    private LocalDate dataValidade;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_controle_desconto", nullable = false)
@@ -71,37 +79,35 @@ public class Produto {
     @Column(name = "petshop", nullable = false)
     private Boolean petshop;
 
+    @Column(name = "eh_fracionado", nullable = false)
+    private Boolean ehFracionado = false;
+
+    @Column(name = "tipo_produto", nullable = false)
+    private TipoProduto tipo;
+
     @CreationTimestamp
     private Instant createdAt;
 
     @UpdateTimestamp
     private Instant updatedAt;
 
-    public int calcularMarkup() {
-        if (custo == null || preco == null || custo.compareTo(BigDecimal.ZERO) == 0) {
-            return 0;
-        }
+    @Column(name = "nome_normalizado")
+    private String nomeNormalizado;
 
-        return preco.subtract(custo)
-                .divide(custo, 2, RoundingMode.HALF_UP)
-                .multiply(BigDecimal.valueOf(100))
-                .intValue();
+    @PrePersist
+    @PreUpdate
+    public void normalizarNome() {
+        if (this.nome != null) {
+            this.nomeNormalizado = normalize(this.nome);
+        }
     }
 
-    public SituacaoEstoque calcularSituacaoEstoque() {
-
-        if (estoqueAtual == null) return null;
-
-        if (estoqueAtual == 0) return SituacaoEstoque.PARADO;
-
-        if (estoqueMinimo != null && estoqueAtual <= estoqueMinimo) {
-            return SituacaoEstoque.REPOR;
-        }
-
-        if (estoqueMaximo != null && estoqueAtual > estoqueMaximo) {
-            return SituacaoEstoque.EXCESSO;
-        }
-
-        return SituacaoEstoque.ADEQUADO;
+    private String normalize(String texto) {
+        return java.text.Normalizer
+                .normalize(texto, java.text.Normalizer.Form.NFD)
+                .replaceAll("[^\\p{ASCII}]", "")
+                .replaceAll("[^a-zA-Z0-9 ]", "")
+                .toLowerCase()
+                .trim();
     }
 }
