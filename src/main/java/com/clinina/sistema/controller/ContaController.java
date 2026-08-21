@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/contas")
@@ -57,5 +59,13 @@ public class ContaController {
     ) {
         BigDecimal saldo = contaService.getSaldoContaPorCaixaFuncionario(caixaId, funcionarioId);
         return ResponseEntity.ok(saldo);
+    }
+
+    @GetMapping("/ping")
+    public Map<String, String> pingar() {
+        System.out.println("Pingou");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Pingou");
+        return response;
     }
 }
