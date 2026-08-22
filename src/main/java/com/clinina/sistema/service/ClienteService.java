@@ -37,8 +37,10 @@ public class ClienteService {
     }
 
     public List<ClienteBuscaResponseDto> listarClientes() {
-        return this.clienteRepository.findAll().stream()
-                .map(clienteMapper::toClienteListarResponseDto).toList();
+        return clienteRepository.buscarClientesComAnimais()
+                .stream()
+                .map(clienteMapper::toClienteListarResponseDto)
+                .toList();
 
     }
 
