@@ -50,7 +50,7 @@ public class Venda {
     @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VendaItem> itens = new ArrayList<>();
 
-    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<VendaPagamento> pagamentos = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -77,4 +77,15 @@ public class Venda {
     @UpdateTimestamp
     @Column(nullable = false)
     private Instant updatedAt;
+
+    public void adicionarPagamento(VendaPagamento pagamento) {
+        pagamentos.add(pagamento);
+        pagamento.setVenda(this);
+    }
+
+    public void adicionarPagamentos(List<VendaPagamento> novosPagamentos) {
+        novosPagamentos.forEach(this::adicionarPagamento);
+    }
+
+
 }

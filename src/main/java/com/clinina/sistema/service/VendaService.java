@@ -303,12 +303,16 @@ public class VendaService {
             if (venda.getPagamentos() == null) {
                 venda.setPagamentos(new ArrayList<>());
             }
-            venda.getPagamentos().addAll(pagamentos);
+
+            venda.adicionarPagamentos(pagamentos);
+
+            vendaRepository.flush();
 
             // calcula total pago acumulado
             BigDecimal totalPago = venda.getPagamentos().stream()
                     .map(VendaPagamento::getValor)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
+
 
             if (totalPago.compareTo(venda.getValorTotal()) < 0) {
                 venda.setStatus(VendaStatus.PARCIAL);
@@ -682,6 +686,7 @@ public class VendaService {
     ) {
         return pagamentosDto.stream()
                 .map(dto -> {
+
                     FormaRecebimento forma = formaRecebimentoRepository.findById(dto.formaRecebimentoId())
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Forma de recebimento não encontrada"));
 
