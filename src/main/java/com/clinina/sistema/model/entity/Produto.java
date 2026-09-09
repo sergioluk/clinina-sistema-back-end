@@ -85,6 +85,10 @@ public class Produto {
     @Column(name = "tipo_produto", nullable = false)
     private TipoProduto tipo;
 
+    @Column(name = "ativo", nullable = false)
+    private boolean ativo = true;
+
+
     @CreationTimestamp
     private Instant createdAt;
 
